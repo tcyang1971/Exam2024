@@ -3,11 +3,16 @@ package tw.edu.pu.csim.tcyang.exam2024
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,7 +57,62 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Introduce(navController: NavController) {
-    Text( text = "簡介", color = Color.Blue)
+    var flag by remember { mutableStateOf(true) }  // 服務總覽與作者切換
+
+    Column (modifier = Modifier
+        .fillMaxSize(),
+    ) {
+        if (flag){
+            Text(text="瑪利亞基金會服務總覽", color = Color.Blue)
+        }
+        else{
+            Text(text="關於App作者", color = Color.Blue)
+        }
+
+        AnimatedVisibility(
+            visible = flag,
+            enter = fadeIn(
+                initialAlpha = 0.1f,
+                animationSpec = tween(durationMillis = 3000)),
+            exit = fadeOut(
+                animationSpec = tween(durationMillis = 3000))
+        ){
+            Image(
+                painterResource(id = R.drawable.service),
+                contentDescription ="服務圖示"
+            )
+        }
+
+        AnimatedVisibility(
+            visible = !flag,
+            enter = fadeIn(
+                initialAlpha = 0.1f,
+                animationSpec = tween(durationMillis = 3000)),
+            exit = fadeOut(
+                animationSpec = tween(durationMillis = 3000))
+        ){
+            Image(
+                painterResource(id = R.drawable.tcyang),
+                contentDescription ="作者圖示"
+            )
+        }
+
+        Button(
+            onClick = { flag = !flag},
+        ) {
+            if (flag){
+                Text(
+                    text = "作者：資管系楊子青",
+                )
+            }
+            else{
+                Text(
+                    text = "服務總覽",
+                )
+            }
+        }
+
+    }
 }
 
 @Composable
